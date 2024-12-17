@@ -1,0 +1,25 @@
+# Python virtual environment
+venv/
+*.pyc
+__pycache__/
+
+# Django specific
+staticfiles/
+media/
+
+# OS-specific files
+.DS_Store
+thumbs.db
+
+# IDE-specific files
+.idea/
+.vscode/
+.editorconfig
+
+# Migration files
+*.log
+*.swp
+*.swo
+
+# Other
+.env

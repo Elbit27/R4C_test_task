@@ -5,7 +5,7 @@ from .models import Robot
 class RobotForm(forms.ModelForm):
     class Meta:
         model = Robot
-        fields = ('model', 'version', 'created')
+        fields = ('serial', 'model', 'version', 'created')
 
     # Дополнительная валидация
     def clean_model(self):

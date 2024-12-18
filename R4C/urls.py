@@ -1,8 +1,7 @@
 from django.contrib import admin
-from django.urls import path
-from robots.views import RobotCreateView
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('robots/create/', RobotCreateView.as_view(), name='robot-create'),
+    path('robots/', include('robots.urls')),
 ]

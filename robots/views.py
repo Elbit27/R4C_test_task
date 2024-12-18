@@ -18,14 +18,15 @@ class RobotCreateView(View):
         # Валидируем данные через форму
         form = RobotForm(data)
 
-        # Проверка на уникальность модели
+        # Проверка на наличие модели в БД
         if form.is_valid():
-            if Robot.objects.filter(model=form.cleaned_data['model']).exists():
-                return JsonResponse({"error": "Model already exists"}, status=400)
+            message = "Robot created successfully!"
+            if Robot.objects.filter(model=form.cleaned_data.get('model')).exists():
+                message = f"Robot with model {form.cleaned_data['model']} already exists! " + message
             # Сохраняем запись в БД
             robot = form.save()
             return JsonResponse(
-                {"message": "Robot created successfully!",
+                {"message": message,
                  "robot": {"model": robot.model, "version": robot.version, "created": robot.created}},
                 status=201
             )

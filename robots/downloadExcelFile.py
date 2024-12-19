@@ -3,10 +3,8 @@ from openpyxl import Workbook
 from django.http import FileResponse, HttpResponse
 from .models import Robot
 from django.db.models import Count
-
 import os
 from django.conf import settings
-
 
 def generate_production_summary_excel():
     # Получаем данные за последнюю неделю
@@ -17,17 +15,28 @@ def generate_production_summary_excel():
         .annotate(total_count=Count("id"))  # Подсчёт количества записей
     )
 
+    # Группируем данные по моделям
+    grouped_data = {}
+    for record in data:
+        model = record["model"]
+        if model not in grouped_data:
+            grouped_data[model] = []
+        grouped_data[model].append(record)
+
     # Создаем Excel-файл
     workbook = Workbook()
-    sheet = workbook.active
-    sheet.title = "Production Summary"
 
-    # Заголовки
-    sheet.append(['Model', 'Version', 'Total Count'])
+    # Удаляем стандартный пустой лист
+    if workbook.active:
+        workbook.remove(workbook.active)
 
-    # Добавляем данные в Excel
-    for record in data:
-        sheet.append([record["model"], record["version"], record["total_count"]])
+    # Создаем листы для каждой модели
+    for model, records in grouped_data.items():
+        sheet = workbook.create_sheet(title=model)
+        sheet.append(['Model', 'Version', 'Total Count'])
+
+        for record in records:
+            sheet.append([record["model"], record["version"], record["total_count"]])
 
     # Сохраняем файл в MEDIA_ROOT
     directory = getattr(settings, 'MEDIA_ROOT', '/tmp')

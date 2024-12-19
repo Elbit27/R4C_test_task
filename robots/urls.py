@@ -1,6 +1,6 @@
 from django.urls import path
 from robots.views import RobotCreateView
-from robots.utils import download_production_summary
+from robots.downloadExcelFile import download_production_summary
 
 urlpatterns = [
     path('create/', RobotCreateView.as_view(), name='robot-create'),
